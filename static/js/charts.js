@@ -58,37 +58,46 @@ function buildCharts(sample) {
   // 2. Use d3.json to load and retrieve the samples.json file 
   d3.json("/static/js/samples.json").then((data) => {
     // 3. Create a variable that holds the samples array. 
-    var metadata = data.metadata;
+    var samples = data.samples;
+    console.log(samples);
     // 4. Create a variable that filters the samples for the object with the desired sample number.
-    var resultArray = metadata.filter(sampleObj => sampleObj.id == sample);
+    var resultArray = samples.filter(sampleObj => sampleObj.id == sample);
+    console.log(resultArray);
     //  5. Create a variable that holds the first sample in the array.
     var result = resultArray[0];
+    console.log(result);
 
     // 6. Create variables that hold the otu_ids, otu_labels, and sample_values.
-    var bb_otu_ids = data.samples.otu_ids;
-    var bb_otu_labels = data.samples.otu_labels;
-    var bb_sample_values = data.samples.sample_values;
+    var bb_otu_ids = result.otu_ids;
+    var bb_otu_labels = result.otu_labels;
+    var bb_sample_values = result.sample_values;
 
     console.log(bb_otu_ids);
     console.log(bb_otu_labels);
     console.log(bb_sample_values);
+
     // 7. Create the yticks for the bar chart.
     // Hint: Get the the top 10 otu_ids and map them in descending order  
     //  so the otu_ids with the most bacteria are last. 
-
-    
-
-    var yticks = 
+    var yticks = bb_otu_ids.map(sampleObj => sampleObj.id == sample).slice(0,11).reverse()
+    console.log(yticks);
 
     // 8. Create the trace for the bar chart. 
-    var barData = [
-      
-    ];
+    var trace = {
+      x: bb_sample_values,
+      y: bb_otu_ids_labels,
+      type: "bar"
+    };
+
+    var barData = [trace];
+
     // 9. Create the layout for the bar chart. 
     var barLayout = {
-     
+      title: "XXXX",
+      xaxis: {title: "sample values"},
+      yaxis: {title: "sample labels"}
     };
     // 10. Use Plotly to plot the data with the layout. 
-    
+    Plotly.newPlot("bar", barData, barLayout)
   });
 }
