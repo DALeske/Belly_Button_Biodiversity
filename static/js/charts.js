@@ -112,30 +112,32 @@ function buildCharts(sample) {
 
    // BUBBLE CHART   
     // 1. Create the trace for the bubble chart.
-    // bubsize = 2*Math.max(bb_sample_values)/(.2**2);
+    
+    // FUNCTION TO SET RAINBOW COLOR BASED ON OTU_ID NUMBER - CONVERT NUMBER TO AN RGB VALUE
+    function idRBG(bb_otu_ids) {
+      var OTUcolor = [];
+      for (i=0;i<bb_otu_ids.length; i++) {
+        var rgb = "rgb";
+           if (bb_otu_ids[i]<500) {rgb = rgb + '(231,0,0)';}
+        else if (bb_otu_ids[i]<1000) {rgb = rgb + '(255,87,51)';}
+        else if (bb_otu_ids[i]<1500) {rgb = rgb + '(255,195,0)';}
+        else if (bb_otu_ids[i]<2000) {rgb = rgb + '(46,125,50)';}
+        else if (bb_otu_ids[i]<2500) {rgb = rgb + '(1,87,155)';}
+        else if (bb_otu_ids[i]<3000) {rgb = rgb + '(140,158,255)';}
+        else {rgb = rgb + '(90,0,234)'}
+        OTUcolor.push(rgb);
+      }
+      return OTUcolor;
+    }
+        
     var bubsize = .01;
 
-    function getMaxofArray(numArray) {
-      return Math.max.apply(null, numArray);
-    }
-    function getMinofArray(numArray) {
-      return Math.min.apply(null, numArray);
-    }
-    var colormin = getMinofArray(bb_otu_ids);
-    var colormax =getMaxofArray(bb_otu_ids);
-
-    console.log(bb_otu_ids);
-    console.log(colormin);
-    console.log(colormax);
 
     var bubbleData = [{
       x: bb_otu_ids,
       y: bb_sample_values,
       mode:"markers",
-      marker: {color: bb_otu_ids, 
-        cmin: colormin,
-        cmax: colormax,
-        colorscale: "jet",
+      marker: {color: idRBG(bb_otu_ids),
         size: bb_sample_values,
         sizeref: bubsize,
         sizemode: "area"},
@@ -152,7 +154,7 @@ function buildCharts(sample) {
       xaxis: {title:"OTU ID"},
       showlegend: false,
       height: 600,
-      width: 800   
+      width: 1200   
     };
 
     // 3. Use Plotly to plot the data with the layout.
